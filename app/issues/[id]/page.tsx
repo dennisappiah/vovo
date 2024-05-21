@@ -6,6 +6,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import EditIssueButton from "../_components/EditIssueButton";
 import DeleteIssueButton from "../_components/DeleteIssueButton";
+import AssigneeSelect from "../_components/AssigneeSelect";
 
 interface Props {
   params: { id: string };
@@ -36,14 +37,12 @@ export default async function IssueDetailPage({ params }: Props) {
       </Box>
       {/* box 2 */}
       <Flex direction="column" gap="4">
+        {/* assignee selector */}
+        <AssigneeSelect />
         {/* edit button */}
-        <Box>
-          <EditIssueButton issueId={issue.id} />
-        </Box>
+        <EditIssueButton issueId={issue.id} />
         {/* delete button */}
-        <Box>
-          <DeleteIssueButton issueId={issue.id} />
-        </Box>
+        <DeleteIssueButton issueId={issue.id} />
       </Flex>
     </Grid>
   );
