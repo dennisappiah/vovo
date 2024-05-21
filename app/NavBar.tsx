@@ -19,7 +19,7 @@ export default function NavBar() {
   // get current route path
   const currentPath = usePathname();
 
-  // get current auth session
+  // get current auth session - client
   const { status, data: session } = useSession();
 
   const links = [

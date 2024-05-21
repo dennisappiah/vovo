@@ -6,14 +6,17 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import EditIssueButton from "../_components/EditIssueButton";
 import DeleteIssueButton from "../_components/DeleteIssueButton";
-import AssigneeSelect from "../_components/AssigneeSelect";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
+import AssignIssueToUserSelector from "../_components/AssignIssueToUserSelector";
 
 interface Props {
   params: { id: string };
 }
 
 export default async function IssueDetailPage({ params }: Props) {
-  //if (typeof params.id !== "number") notFound();
+  // get current auth session - server side
+  const session = await getServerSession(authOptions);
 
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(params.id) },
@@ -24,7 +27,7 @@ export default async function IssueDetailPage({ params }: Props) {
   //80% (4/5) of width to issue details (box1), 20% to actions (Box 2)
   return (
     <Grid columns={{ initial: "1", md: "5" }} gap="5">
-      {/* box 1 */}
+      {/* grid box 1 */}
       <Box className="col-span-4">
         <Heading>{issue.title}</Heading>
         <Flex className="space-x-3" my="2">
@@ -35,15 +38,19 @@ export default async function IssueDetailPage({ params }: Props) {
           <ReactMarkdown>{issue.description}</ReactMarkdown>
         </Card>
       </Box>
-      {/* box 2 */}
-      <Flex direction="column" gap="4">
-        {/* assignee selector */}
-        <AssigneeSelect />
-        {/* edit button */}
-        <EditIssueButton issueId={issue.id} />
-        {/* delete button */}
-        <DeleteIssueButton issueId={issue.id} />
-      </Flex>
+      {/* grid box 2 */}
+      {session && (
+        <Box>
+          <Flex direction="column" gap="4">
+            {/* Assignee selector */}
+            <AssignIssueToUserSelector issue={issue} />
+            {/* edit button */}
+            <EditIssueButton issueId={issue.id} />
+            {/* delete button */}
+            <DeleteIssueButton issueId={issue.id} />
+          </Flex>
+        </Box>
+      )}
     </Grid>
   );
 }
