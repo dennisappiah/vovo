@@ -1,11 +1,18 @@
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
-import { Issue } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
 
+export interface IssueQuery {
+  status: Status;
+  orderBy: keyof Issue;
+  page: string;
+}
+
 interface Props {
   issues: Issue[];
+  searchPrams: IssueQuery;
 }
 
 export default function IssueTable({ issues }: Props) {
