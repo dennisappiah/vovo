@@ -5,6 +5,7 @@ import React from "react";
 import useUsers from "../_hooks/useUsers";
 import { Issue } from "@prisma/client";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 interface Props {
   issue: Issue;
@@ -21,7 +22,7 @@ export default function AssignIssueToUserSelector({ issue }: Props) {
         userId: userId || null,
       })
       .catch(() => {
-        console.log("error occurred");
+        toast.error("Issue could be assigned ");
       });
   };
 
@@ -46,6 +47,7 @@ export default function AssignIssueToUserSelector({ issue }: Props) {
           </Select.Group>
         </Select.Content>
       </Select.Root>
+      <Toaster />
     </>
   );
 }

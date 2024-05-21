@@ -4,11 +4,11 @@ import { Card, Flex, Grid, Heading, Text, Box, Button } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import EditIssueButton from "../_components/EditIssueButton";
-import DeleteIssueButton from "../_components/DeleteIssueButton";
+import EditIssueButton from "./EditIssueButton";
+import DeleteIssueButton from "./DeleteIssueButton";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/auth/authOptions";
-import AssignIssueToUserSelector from "../_components/AssignIssueToUserSelector";
+import AssignIssueToUserSelector from "./AssignIssueToUserSelector";
 
 interface Props {
   params: { id: string };
