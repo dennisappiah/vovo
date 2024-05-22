@@ -1,8 +1,10 @@
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
-import { Issue, Status } from "@prisma/client";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
+import NextLink from "next/link";
+import { Issue, Status } from "@prisma/client";
 
 export interface IssueQuery {
   status: Status;
@@ -11,34 +13,66 @@ export interface IssueQuery {
 }
 
 interface Props {
+  searchParams: IssueQuery;
   issues: Issue[];
-  searchPrams: IssueQuery;
 }
 
-export default function IssueTable({ issues }: Props) {
+const columns: {
+  label: string;
+  value: keyof Issue;
+  className?: string;
+}[] = [
+  { label: "Issue", value: "title" },
+  {
+    label: "Status",
+    value: "status",
+    className: "hidden md:table-cell",
+  },
+  {
+    label: "Created",
+    value: "createdAt",
+    className: "hidden md:table-cell",
+  },
+];
+
+export const columnNames = columns.map((column) => column.value);
+
+const IssueTable = ({ searchParams, issues }: Props) => {
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
-          <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell className="hidden md:table-cell">
-            Status
-          </Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell className="hidden md:table-cell">
-            Created
-          </Table.ColumnHeaderCell>
+          {columns.map((column) => (
+            <Table.ColumnHeaderCell
+              key={column.value}
+              className={column.className}
+            >
+              <NextLink
+                href={{
+                  query: {
+                    ...searchParams,
+                    orderBy: column.value,
+                  },
+                }}
+              >
+                {column.label}
+              </NextLink>
+              {column.value === searchParams?.orderBy && (
+                <ArrowUpIcon className="inline" />
+              )}
+            </Table.ColumnHeaderCell>
+          ))}
         </Table.Row>
       </Table.Header>
-
       <Table.Body>
         {issues.map((issue) => (
           <Table.Row key={issue.id}>
-            <Table.RowHeaderCell>
+            <Table.Cell>
               <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
               <div className="block md:hidden">
                 <IssueStatusBadge status={issue.status} />
               </div>
-            </Table.RowHeaderCell>
+            </Table.Cell>
             <Table.Cell className="hidden md:table-cell">
               <IssueStatusBadge status={issue.status} />
             </Table.Cell>
@@ -50,4 +84,6 @@ export default function IssueTable({ issues }: Props) {
       </Table.Body>
     </Table.Root>
   );
-}
+};
+
+export default IssueTable;
