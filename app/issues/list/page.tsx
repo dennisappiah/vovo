@@ -3,6 +3,8 @@ import prisma from "@/prisma/client";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnNames, IssueQuery } from "./IssueTable";
 import { Status } from "@prisma/client";
+import Pagination from "@/app/components/Pagination";
+import { Flex } from "@radix-ui/themes";
 
 // issues/lists?status=OPEN&orderBy=title&page=2
 
@@ -34,10 +36,17 @@ export default async function IssuesPage({ searchParams }: Props) {
     take: pageSize,
   });
 
+  const issueCount = await prisma.issue.count({ where });
+
   return (
-    <>
+    <Flex direction="column" gap="3">
       <IssueActions />
       <IssueTable issues={issues} searchParams={searchParams} />
-    </>
+      <Pagination
+        pageSize={pageSize}
+        currentPage={page}
+        itemsCount={issueCount}
+      />
+    </Flex>
   );
 }

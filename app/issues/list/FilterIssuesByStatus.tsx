@@ -16,7 +16,7 @@ export default function FilterIssuesByStatus() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // issues/lists?status=OPEN
+  // issues/lists?status=OPEN&orderBy=title
   const handleQueryParameter = (status: Status) => {
     const params = new URLSearchParams();
 
@@ -39,7 +39,7 @@ export default function FilterIssuesByStatus() {
 
       <Select.Content>
         {statuses.map((status) => (
-          <Select.Item key={status.value} value={status.value!}>
+          <Select.Item key={status.label} value={status.value!}>
             {status.label}
           </Select.Item>
         ))}

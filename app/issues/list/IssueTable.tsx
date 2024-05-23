@@ -1,7 +1,7 @@
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
-import Link from "next/link";
+import Link from "@/app/components/Link";
 import React from "react";
 import NextLink from "next/link";
 import { Issue, Status } from "@prisma/client";
@@ -57,6 +57,7 @@ const IssueTable = ({ searchParams, issues }: Props) => {
               >
                 {column.label}
               </NextLink>
+              {/* render ArrowIcon */}
               {column.value === searchParams?.orderBy && (
                 <ArrowUpIcon className="inline" />
               )}
