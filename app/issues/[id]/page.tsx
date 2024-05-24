@@ -2,7 +2,7 @@ import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import prisma from "@/prisma/client";
 import { Card, Flex, Grid, Heading, Text, Box, Button } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { cache } from "react";
 import ReactMarkdown from "react-markdown";
 import EditIssueButton from "./EditIssueButton";
 import DeleteIssueButton from "./DeleteIssueButton";
@@ -13,6 +13,10 @@ import AssignIssueToUserSelector from "./AssignIssueToUserSelector";
 interface Props {
   params: { id: string };
 }
+
+const fetchUser = cache((issueId: number) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
 
 export default async function IssueDetailPage({ params }: Props) {
   // get current auth session - server side
@@ -53,4 +57,13 @@ export default async function IssueDetailPage({ params }: Props) {
       )}
     </Grid>
   );
+}
+
+export async function generateMetadata({ params }: Props) {
+  const issue = await fetchUser(parseInt(params.id));
+
+  return {
+    title: issue?.title,
+    description: "Details of issue " + issue?.id,
+  };
 }
